@@ -11,21 +11,24 @@ from datetime import datetime, timedelta
 BACKEND = BROKER = 'redis://localhost:6379'
 celery = Celery(__name__, backend=BACKEND, broker=BROKER)
 
+
 celery.conf.beat_schedule = {
     # Executes every morning at 7:30 a.m.
     'add-every-morning': {
-        'task': 'tasks.send_emails',
-        'schedule': crontab(hour=7, minute=30)
+        'task': 'email_digest.send_emails',
+        'schedule': 5#crontab(hour=7, minute=30)
     },
 }
+
 celery.conf.timezone = 'UTC'
 
 # PERIODIC DIGEST
 @celery.task
 def send_emails():
     """Send periodic digest to all users"""
-    email, password = get_config_data()
-    server = get_server(email, password)
+    print("Sending emails...")
+    data = get_config_data()
+    server = get_server(data)
     # Get all users
     user_tab = get_users()
 
@@ -47,23 +50,21 @@ def send_emails():
     return result
 
 def get_config_data():
-    with open("config.txt", r) as config:
+    with open("config.txt", "r") as config:
         data = json.load(config)
-        email = data["email"]
-        password = data["password"]
 
-    return email, password
+    return data
 
 
-def get_server(email, password):
+def get_server(data):
     # STARTING MAIL SERVER
-    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server = smtplib.SMTP(data["smtp"], data["port"])
     server.starttls()
     try:
-        server.login(email, password)
+        server.login(data["email"], data["password"])
     except:
-        raise serverLoginErrorr
-
+        raise Exception('Failed to login to smpt server.')
+    return server
 
 def prepare_message(user, email):
     msg = MIMEMultipart()
@@ -119,10 +120,5 @@ def get_user(userid):
 
 def get_users():
     """Return all the users in the db"""
-    return User.query.all()
-
-
-# EXCEPTIONS
-def serverLoginError(Error):
-    """Email server login error. Check e-mail or password!"""
-    pass
+    #TODO
+    return []

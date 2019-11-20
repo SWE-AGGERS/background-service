@@ -1,4 +1,6 @@
 {
-"username": "",
-"password": ""
+"email": "socialdice@yandex.com",
+"password": "Un30eLodeMeritato!",
+"smtp": "imap.yandex.com",
+"port": "465"
 }
