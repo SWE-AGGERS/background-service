@@ -1,6 +1,6 @@
 {
 "email": "danimorpg@gmail.com",
-"password": "KhaosMaker",
+"password": "----------------",
 "smtp": "smtp.gmail.com",
 "port": 587
 }
