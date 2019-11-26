@@ -115,7 +115,7 @@ def get_all_stories_by_writer(userid):
     end_date = init_date + timedelta(hours=24)
     _json = {"init_date": init_date, "end_date": end_date, "userid": userid}
     try:
-        reply = request.get("https://"+STORIES_SERVICE_IP+":"+STORIES_SERVICE_PORT+"/stories/filter", json=_json)
+        reply = request.get("https://"+STORIES_SERVICE_IP+":"+STORIES_SERVICE_PORT+"/stories/filter", json=_json, timeout=1)
         result = json.load(reply.data)
     except:
         print("Error on /stories/filter api call")
@@ -135,7 +135,7 @@ def get_all_stories_by_writer(userid):
 def get_followed_list(userid):
     """Get users followed by userid"""
     try:
-        reply = request.get("https://"+USERS_SERVICE_IP+":"+USERS_SERVICE_PORT+"/followed/list/"+str(userid))
+        reply = request.get("https://"+USERS_SERVICE_IP+":"+USERS_SERVICE_PORT+"/followed/list/"+str(userid), timeout=1)
         result = json.load(reply.data)["followed"]
     except:
         result = []
@@ -146,7 +146,7 @@ def get_followed_list(userid):
 def get_user(userid):
     """get the User object from the db"""
     try:
-        reply = request.get("https://"+USERS_SERVICE_IP+":"+USERS_SERVICE_PORT+"/user/"+str(userid))
+        reply = request.get("https://"+USERS_SERVICE_IP+":"+USERS_SERVICE_PORT+"/user/"+str(userid), timeout=1)
         result = json.load(reply.data)
     except:
         print("Error on /user/<userid> api connection!")
@@ -158,7 +158,7 @@ def get_user(userid):
 def get_users():
     """Return all the users in the db"""
     try:
-        reply = request.get("https://"+USERS_SERVICE_IP+":"+USERS_SERVICE_PORT+"/users")
+        reply = request.get("https://"+USERS_SERVICE_IP+":"+USERS_SERVICE_PORT+"/users", timeout=1)
         result = json.load(reply.data)
     except:
         result = []
