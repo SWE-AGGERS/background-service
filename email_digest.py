@@ -44,7 +44,6 @@ def send_emails():
     result = True
     # Send an email with news to all users
     for user in user_tab:
-        print("CIAO")
         msg = prepare_message(user, data["email"])
         try:
             server.sendmail(
@@ -99,7 +98,6 @@ def maker_message(user):
         # count them)
         stories_number = len(get_all_stories_by_writer(followed))
         f = get_user(followed)[0]
-        print(f)
         if f is not None:
             # put a line in the text with "<followed_user_name> posts <stories_number> new stories!"
             if stories_number > 0:
@@ -107,10 +105,6 @@ def maker_message(user):
                     " posts "+str(stories_number)+" new stories."
 
     text += "\n\nSee you on SocialDice,\nSweaggers Team"
-
-    print("######## ---->")
-    print(text)
-
     return text
 
 
