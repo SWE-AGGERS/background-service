@@ -45,11 +45,12 @@ def send_emails():
     result = True
     # Send an email with news to all users
     for user in user_tab:
-        msg = prepare_message(user, email)
+        print("CIAO")
+        msg = prepare_message(user, data["email"])
         try:
             server.sendmail(
-                from_addr=email,
-                to_addrs=user.email,
+                from_addr=data["email"],
+                to_addrs=user["email"],
                 msg=msg.as_string()
             )
         except:
@@ -68,10 +69,10 @@ def get_config_data():
 
 def get_server(data):
     # STARTING MAIL SERVER
-    server = smtplib.SMTP(data["smtp"], data["port"])
+    server = smtplib.SMTP(str(data["smtp"]), int(data["port"]))
     server.starttls()
     try:
-        server.login(data["email"], data["password"])
+        server.login(str(data["email"]), str(data["password"]))
     except:
         raise Exception('Failed to login to smpt server.')
     return server
@@ -79,7 +80,7 @@ def get_server(data):
 def prepare_message(user, email):
     msg = MIMEMultipart()
     msg['From'] = email
-    msg['To'] = user.email
+    msg['To'] = user["email"]
     msg['Subject'] = 'SocialDice - News!'
     message = maker_message(user)
     msg.attach(MIMEText(message))
@@ -87,8 +88,8 @@ def prepare_message(user, email):
 
 def maker_message(user):
     """Make personalized message for each user"""
-    text = "Hello "+user.firstname
-    followed_list = get_followed_list(user.id)
+    text = "Hello "+user["firstname"]
+    followed_list = get_followed_list(user["user_id"])
     if len(followed_list) == 0:
         return text+",\n\nYou have no news for today, take a look and add new writers on Sweaggers' SocialDice!"
     else:
@@ -98,14 +99,18 @@ def maker_message(user):
         # get all stories of a follower posted in the last 24h
         # count them)
         stories_number = len(get_all_stories_by_writer(followed))
-        f = get_user(followed)
+        f = get_user(followed)[0]
+        print(f)
         if f is not None:
             # put a line in the text with "<followed_user_name> posts <stories_number> new stories!"
             if stories_number > 0:
-                text += "\n - "+f.firstname+" "+f.lastname + \
+                text += "\n - "+f["firstname"]+" "+f["lastname"] + \
                     " posts "+str(stories_number)+" new stories."
 
     text += "\n\nSee you on SocialDice,\nSweaggers Team"
+
+    print("######## ---->")
+    print(text)
 
     return text
 
@@ -151,8 +156,9 @@ def get_user(userid):
         reply = request.get("https://"+USERS_SERVICE_IP+":"+USERS_SERVICE_PORT+"/user/"+str(userid))
         result = json.load(reply.data)
     except:
-        result = None
         print("Error on /user/<userid> api connection!")
+        return None
+
     return result
 
 

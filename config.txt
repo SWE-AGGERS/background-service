@@ -1,6 +1,6 @@
 {
-"email": "socialdice@yandex.com",
-"password": "Un30eLodeMeritato!",
-"smtp": "imap.yandex.com",
-"port": "465"
+"email": "danimorpg@gmail.com",
+"password": "KhaosMaker",
+"smtp": "smtp.gmail.com",
+"port": 587
 }
