@@ -2,8 +2,7 @@ from celery import Celery
 import json
 from flask import Flask, request
 
-from constants import (FOLLOWERS_SERVICE_IP, 
-    FOLLOWERS_SERVICE_PORT, 
+from constants import ( 
     USERS_SERVICE_IP, 
     USERS_SERVICE_PORT,
     STORIES_SERVICE_IP,
@@ -142,7 +141,7 @@ def get_all_stories_by_writer(userid):
 def get_followed_list(userid):
     """Get users followed by userid"""
     try:
-        reply = request.get("https://"+FOLLOWERS_SERVICE_IP+":"+FOLLOWERS_SERVICE_PORT+"/followed/list/"+str(userid))
+        reply = request.get("https://"+USERS_SERVICE_IP+":"+USERS_SERVICE_PORT+"/followed/list/"+str(userid))
         result = json.load(reply.data)["followed"]
     except:
         result = []
