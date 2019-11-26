@@ -25,7 +25,7 @@ celery.conf.beat_schedule = {
     # Executes every morning at 7:30 a.m.
     'add-every-morning': {
         'task': 'email_digest.send_emails',
-        'schedule': 5#crontab(hour=7, minute=30)
+        'schedule': crontab(hour=7, minute=30) #30.0 -> if u want every 30 sec
     },
 }
 
